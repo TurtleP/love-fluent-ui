@@ -7,9 +7,6 @@ function Panel:new(x, y, width, height)
     self:setSize(width, height)
 
     self.corner_radius = 2
-
-    self.highlight_color = UI._hexColor("#EEEEEE")
-    self.shadow_color = UI._hexColor("#42424266")
 end
 
 function Panel:shadowColor()
@@ -22,18 +19,6 @@ function Panel:setShadowColor(color)
     end
 
     self.shadow_color = color
-end
-
-function Panel:highlightColor()
-    return self.highlight_color
-end
-
-function Panel:setHighlightColor(color)
-    if type(color) == "string" then
-        color = UI._hexColor(color)
-    end
-
-    self.highlight_color = color
 end
 
 function Panel:_zeroValues(...)
@@ -49,14 +34,18 @@ function Panel:_zeroValues(...)
 end
 
 function Panel:_onEnter()
-    self.background_color = self.highlight_color
+    self:setBackgroundColor(self.highlight_color)
 end
 
 function Panel:_onExit()
-    self.background_color = self.default_background_color
+    self:setBackgroundColor(self.default_background_color)
 end
 
 function Panel:mouseMoved(x, y)
+    if not self:enabled() then
+        return
+    end
+
     self.hovered = self:_isHovered(x, y)
 
     if self.hovered then

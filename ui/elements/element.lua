@@ -1,23 +1,47 @@
 
+local Object = require("ui.libs.classic")
+local Utility = require("ui.libs.util")
+
 local Element = Object:extend()
+Element.PADDING = 8
 
 function Element:new(x, y)
     self.bounds = {x = x, y = y, width = 64, height = 32}
 
-    self.background_color = UI._hexColor("#FFFFFF")
-    self.foreground_color = UI._hexColor("#FFFFFF")
-    self.accent_color     = UI._hexColor("#039BE5")
-
     self.margin = {0, 0, 0, 0}
+
+    -- apply globals
+    self:applyColors(UI.Colors[UI.Theme])
+
+    -- apply theme colors
+    self:applyColors(UI.Colors[UI.Theme][tostring(self)])
 
     self.default_background_color = self.background_color
     self.default_foreground_color = self.foreground_color
-    self.default_accent_color     = self.accent_color
 
     self.font = UI.DefaultFont
 
     self.enums = {}
     self.hovered = false
+    self.is_enabled = true
+end
+
+function Element:applyColors(colors)
+    for k, v in pairs(colors) do
+        self[k] = UI._hexColor(v)
+    end
+end
+
+function Element:highlightColor()
+    return self.highlight_color
+end
+
+function Element:setHighlightColor(color)
+    if type(color) == "string" then
+        color = UI._hexColor(color)
+    end
+
+    self.highlight_color = color
 end
 
 function Element:setFont(font)
@@ -28,30 +52,40 @@ function Element:hover()
     return self.hovered
 end
 
+function Element:setEnabled(enabled)
+    self.is_enabled = enabled
+end
+
+function Element:enabled()
+    return self.is_enabled
+end
+
 function Element:setBackgroundColor(color)
     if type(color) == "string" then
-        color = UI._hexColor(color)
+        color = Utility.hexColor(color)
     end
 
     self.background_color = color
+end
+
+function Element:setDefaultBackgroundColor(color)
+    if type(color) == "string" then
+        color = Utility.hexColor(color)
+    end
+
     self.default_background_color = color
 end
 
 function Element:accentColor()
-    return self.accent_color
+    return UI.accentColor()
 end
 
 function Element:setAccentColor(color)
     if type(color) == "string" then
-        color = UI._hexColor(color)
+        color = Utility.hexColor(color)
     end
 
-    self.accent_color = color
-    self.default_accent_color = color
-end
-
-function Element:defaultAccentColor()
-    return self.default_accent_color
+    UI.setAccentColor(color)
 end
 
 function Element:backgroundColor()
@@ -64,10 +98,17 @@ end
 
 function Element:setForegroundColor(color)
     if type(color) == "string" then
-        color = UI._hexColor(color)
+        color = Utility.hexColor(color)
     end
 
     self.foreground_color = color
+end
+
+function Element:setDefaultForegroundColor(color)
+    if type(color) == "string" then
+        color = Utility.hexColor(color)
+    end
+
     self.default_foreground_color = color
 end
 

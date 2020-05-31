@@ -1,7 +1,7 @@
 function love.conf(t)
     t.console = true
 
-    t.window.width = 400
+    t.window.width = 640
     t.window.height = 320
 
     t.window.title = "Fluënt UI"

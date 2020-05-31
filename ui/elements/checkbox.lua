@@ -1,22 +1,24 @@
-local PARENT = UI.Elements.Button
+local PARENT = UI.Elements._Clickable
 local Checkbox = PARENT:extend()
 
 function Checkbox:new(x, y, ...)
     Checkbox.super.new(self, x, y, 16, 16, ...)
 
-    self.accent_highlight_color = UI._hexColor("#0288d1")
-    self.checked_highlight_foreground = UI._hexColor("#e0e0e0")
+    local arg = ...
 
-    self:setForegroundColor("#FFFFFF")
-
-    if self.label then
-        self.label:setPosition(x + self:width() + 8, UI._round(self:y() + (self:height() - self.label:height()) / 2))
+    if not arg then
+        arg = {}
     end
+
+    local text            = arg.text or ""
+    local has_three_state = arg.three_state or false
+
+    self.label = UI.Elements.Label(text, x + self:width() + Checkbox.PADDING, self:y(), {align = "vertical"})
 end
 
 function Checkbox:draw()
     if self:checked() then
-        love.graphics.setColor(self:defaultAccentColor())
+        love.graphics.setColor(self:accentColor())
 
         local x, y, w, h = self:dimensions()
         love.graphics.rectangle("fill", x, y, w, h, self.corner_radius, self.corner_radius)
@@ -33,25 +35,8 @@ function Checkbox:draw()
     end
 
     if self.label then
-        self.label:draw()
-    end
-end
-
-function Checkbox:_onEnter()
-    self.background_color = self.highlight_color
-
-    if self:checked() then
-        self.default_accent_color = self.accent_highlight_color
-        self.foreground_color = self.checked_highlight_foreground
-    end
-end
-
-function Checkbox:_onExit()
-    Checkbox.super._onExit(self)
-
-    if self.is_checked then
-        self.default_accent_color = self.accent_color
-        self.foreground_color = self:defaultForegroundColor()
+        love.graphics.setColor(self:foregroundColor())
+        love.graphics.print(self.label:text(), self.label:x(), self.label:y())
     end
 end
 
@@ -65,6 +50,10 @@ end
 
 function Checkbox:checked()
     return self.is_checked
+end
+
+function Checkbox:__tostring()
+    return "Checkbox"
 end
 
 return Checkbox

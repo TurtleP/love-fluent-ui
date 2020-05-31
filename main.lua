@@ -7,27 +7,27 @@ UI = require('ui')
 
 function love.load()
     UI.init("data/states")
-    -- UI.loadSchema("penis")
 
     love.graphics.setBackgroundColor(0, 0, 0)
 
     GUI = {}
-    table.insert(GUI, UI.Elements.Label("Favorie Programming Language?", 10, 10))
 
-    local choices = {"C", "Java", "C++"}
-    for i = 1, #choices do
-        table.insert(GUI, UI.Elements.RadioButton("people", 24, 32 + (i - 1) * 20, choices[i]))
-    end
+    table.insert(GUI, UI.Elements.Button(10, 10, 64, 32, {text = "Button"}))
 
-    table.insert(GUI, UI.Elements.ListBox(10, 120, 120, 32, {header = "What is LÖVE?", items = {
-        "Baby don't hurt me", "no more", "AAAAAAAAAAAAAAA"
-    }}))
+    local config =
+    {
+        text = "Toggle Left",
+        callback =
+        {
+            func = function(arg)
+                arg.obj:setEnabled(not arg.obj:enabled())
+            end,
+            args = {obj = GUI[1]}
+        }
+    }
 
-    table.insert(GUI, UI.Elements.Slider(10, 175, nil, nil, 0, 0, 10))
-    table.insert(GUI, UI.Elements.Slider(200, 80, 2, 120, 0, 0, 10))
-
-    table.insert(GUI, UI.Elements.Button(10, 200, 64, 32, {text = "Button"}))
-    table.insert(GUI, UI.Elements.Checkbox(10, 250, {text = "I agree to the terms of service."}))
+    table.insert(GUI, UI.Elements.Checkbox(96, 18, config))
+    table.insert(GUI, UI.Elements.RadioButton("test", 10, 64, 16, 16, {text = "Click Me"}))
 end
 
 function love.update(dt)

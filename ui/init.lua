@@ -1,9 +1,8 @@
 local PATH = (...):gsub('%.init$', '')
 
-local JSON   = require(PATH .. ".libs.json")
-flux         = require(PATH .. ".libs.flux")
-
-Object = require(PATH .. ".libs.classic")
+local JSON    = require(PATH .. ".libs.json")
+local flux    = require(PATH .. ".libs.flux")
+local Utility = require(PATH .. ".libs.util")
 
 local UI =
 {
@@ -58,10 +57,11 @@ function UI.init(path)
     UI.DefaultFont = UI.Fonts.RobotoRegular
 
     UI.Elements = {}
-    UI.Elements.Base = require(PATH .. ".elements.element")
+    UI.Elements.Base        = require(PATH .. ".elements.element")
 
     -- Require in order of Dependency
-    UI.Elements.Panel    = require(PATH .. ".elements.panel")
+    UI.Elements.Panel       = require(PATH .. ".elements.panel")
+    UI.Elements._Clickable  = require(PATH .. ".elements.clickable")
 
     UI.Elements.Label       = require(PATH .. ".elements.label")
     UI.Elements.Button      = require(PATH .. ".elements.button")
@@ -70,6 +70,12 @@ function UI.init(path)
     UI.Elements.Toggle      = require(PATH .. ".elements.toggle")
     UI.Elements.ListBox     = require(PATH .. ".elements.listbox")
     UI.Elements.RadioButton = require(PATH .. ".elements.radiobutton")
+    UI.Elements.Tab         = require(PATH .. ".elements.tab")
+
+    UI.setAccentColor("#1e88e5")
+
+    UI.Colors = {}
+    UI.loadColors("dark")
 
     local items = love.filesystem.getDirectoryItems(path)
     UI._Schemas = {}
@@ -78,6 +84,13 @@ function UI.init(path)
         local name = items[i]:gsub(".json", "")
         UI._Schemas[name] = JSON:decode(path .. "/" .. items[i])
     end
+end
+
+function UI.loadColors(name)
+    local colors = require(PATH .. ".colors." .. name)
+    UI.Colors[name] = colors
+
+    UI.Theme = name
 end
 
 function UI.update(dt)
@@ -97,14 +110,11 @@ function UI.loadSchema(name)
 end
 
 function UI._hexColor(hex)
-    local value = tostring(hex):gsub("#?x?", "")
-    local out = {}
+    return Utility.hexColor(hex)
+end
 
-    for i = 1, #value, 2 do
-        table.insert(out, tonumber(value:sub(i, i + 1), 16))
-    end
-
-    return {love.math.colorFromBytes(out)}
+function UI.Color(name)
+    return Utility.hexColor(UI.Colors[name])
 end
 
 function UI.setAccentColor(color)
@@ -113,6 +123,10 @@ function UI.setAccentColor(color)
     end
 
     UI.accent_color = color
+end
+
+function UI.accentColor()
+    return UI.accent_color
 end
 
 function UI._round(x)

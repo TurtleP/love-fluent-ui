@@ -1,42 +1,34 @@
-local PARENT = UI.Elements.Panel
+local PARENT = UI.Elements._Clickable
 local Button = PARENT:extend()
+
+-- Button:implement(UI.Elements._Clickable)
 
 local Label = UI.Elements.Label
 
 function Button:new(x, y, width, height, ...)
     Button.super.new(self, x, y, width, height)
 
-    -- self.highlight_color  = UI._hexColor("#9e9e9e")
+    self:applyColors(UI.Colors[UI.Theme].Button)
 
     local arg = ...
 
-    if arg then
-        self.label = Label(arg.text, x, y)
-        self.enums = { "horizontal", "vertical", "center" }
-
-        self:setTextAlign("center")
+    if not arg then
+        arg = {}
     end
 
-    self.clicked = function()
-        print("yeet")
-    end
+    local text = arg.text or "Button"
 
-    self:setBackgroundColor("#6d6d6d")
-    -- self:setForegroundColor("#000000")
+    self.label = Label(text, x, y)
+    self.enums = { "horizontal", "vertical", "center" }
 
-    self.args = nil
+    self:setTextAlign("center")
 end
 
 function Button:draw()
     local x, y, w, h = self:dimensions()
 
-    love.graphics.setColor(self:defaultBackgroundColor())
+    love.graphics.setColor(self:backgroundColor())
     love.graphics.rectangle("fill", x, y, w, h, self.corner_radius, self.corner_radius)
-
-    if self.hovered then
-        love.graphics.setColor(self:highlightColor())
-        love.graphics.rectangle("line", x, y, w, h, self.corner_radius, self.corner_radius)
-    end
 
     love.graphics.push()
     love.graphics.translate(self.margin[1], self.margin[2])
@@ -53,6 +45,14 @@ end
 
 function Button:setTextf(text, ...)
     self.label:setTextf(text, ...)
+end
+
+function Button:setBackgroundColor(color)
+    Button.super.setBackgroundColor(self, color)
+
+    if self.label then
+        self.label:setBackgroundColor(color)
+    end
 end
 
 function Button:setForegroundColor(color)
@@ -80,18 +80,18 @@ function Button:setTextAlign(mode)
     end
 end
 
-function Button:setCallback(func, ...)
-    self.args = {...}
+function Button:setEnabled(enabled)
+    self.is_enabled = enabled
 
-    self.clicked = function(args)
-        return func(args)
+    if enabled then
+        self:setForegroundColor(self.text_color_enabled)
+    else
+        self:setForegroundColor(self.text_color_disabled)
     end
 end
 
-function Button:mouseClicked()
-    if self.hovered then
-        return self.clicked(self.args)
-    end
+function Button:__tostring()
+    return "Button"
 end
 
 return Button

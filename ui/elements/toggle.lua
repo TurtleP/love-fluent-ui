@@ -1,3 +1,5 @@
+local flux = require("ui.libs.flux")
+
 local PARENT = UI.Elements.Button
 local Toggle = PARENT:extend()
 
@@ -8,7 +10,11 @@ function Toggle:new(x, y, width, height, ...)
     self.toggle_radius = 5
 
     self.toggled = false
-    self.circle_pos = self:x() + 10
+    self.circle_pos = self:x() + 5
+
+    if self.label then
+        self.label:setX(self:x() + self:width() + Toggle.PADDING)
+    end
 end
 
 function Toggle:draw()
@@ -22,8 +28,10 @@ function Toggle:draw()
     end
 
     love.graphics.setColor(self.toggle_color)
-    love.graphics.circle("fill", self.circle_pos, self:y() + self:height() / 2, self.toggle_radius)
-    love.graphics.circle("line", self.circle_pos, self:y() + self:height() / 2, self.toggle_radius)
+    love.graphics.setFont(UI.Fonts.FontAwesomeSolid)
+    love.graphics.print("", self.circle_pos, self:y() + (self:height() - UI.Fonts.FontAwesomeSolid:getHeight()) / 2 - 1)
+
+    self.label:draw()
 end
 
 function Toggle:mouseClicked()
@@ -35,9 +43,9 @@ function Toggle:mouseClicked()
     end
 
     if self.toggled then
-        flux.to(self, 0.1, {circle_pos = (self:x() + self:width() - 10)}):ease("linear")
+        flux.to(self, 0.1, {circle_pos = (self:x() + self:width() - 20)}):ease("linear")
     else
-        flux.to(self, 0.1, {circle_pos = (self:x() + 10)}):ease("linear")
+        flux.to(self, 0.1, {circle_pos = (self:x() + 5)}):ease("linear")
     end
 
     return ret
