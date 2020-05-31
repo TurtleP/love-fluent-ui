@@ -28,6 +28,7 @@ function love.load()
 
     table.insert(GUI, UI.Elements.Checkbox(96, 18, config))
     table.insert(GUI, UI.Elements.RadioButton("test", 10, 64, 16, 16, {text = "Click Me"}))
+    table.insert(GUI, UI.Elements.Toggle(96, 61, 48, 22, {text = "Click Me"}))
 end
 
 function love.update(dt)

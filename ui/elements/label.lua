@@ -4,15 +4,13 @@ local Label = PARENT:extend()
 function Label:new(text, x, y, ...)
     self.text_object = love.graphics.newText(UI.DefaultFont, text)
 
-    self:applyColors(UI.Colors[UI.Theme].Label)
-
     local arg = ...
 
     if not arg then
         arg = {}
     end
 
-    local width = arg.width or self.text_object:getWidth()
+    local width  = arg.width or self.text_object:getWidth()
     local height = arg.height or self.text_object:getHeight()
 
     Label.super.new(self, x, y, width, height)
@@ -66,7 +64,12 @@ function Label:setTextAlign(mode)
             y = (self:height() - self.text_object:getHeight()) / 2
         end
 
-        self:setMargin(UI._round(x), UI._round(y))
+        local off = 0
+        if self.corner_radius > 0 then
+            off = self.corner_radius
+        end
+
+        self:setPosition(self:x() + UI._round(x), self:y() + UI._round(y) + off)
     end
 end
 

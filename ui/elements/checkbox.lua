@@ -35,6 +35,7 @@ function Checkbox:draw()
     end
 
     if self.label then
+        love.graphics.setFont(UI.DefaultFont)
         love.graphics.setColor(self:foregroundColor())
         love.graphics.print(self.label:text(), self.label:x(), self.label:y())
     end

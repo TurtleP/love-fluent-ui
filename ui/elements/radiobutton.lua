@@ -29,20 +29,20 @@ function RadioButton:new(group, x, y, width, height, ...)
 
     table.insert(RadioButton.GROUPS[group]._RADIOS, self)
 
-    self.label = UI.Elements.Label(text, x + width + RadioButton.PADDING, self:y(), {align = "vertical"})
+    self.label = UI.Elements.Label(text, x + width + RadioButton.PADDING, self:y(), {height = height - 2, align = "vertical"})
+
     self.group = group
 end
 
 function RadioButton:draw()
-    if not self:checked() then
-        love.graphics.setFont(UI.Fonts.FontAwesomeRegular)
+    love.graphics.setFont(UI.Fonts.FontAwesomeRegular)
 
+    if not self:checked() then
         love.graphics.setColor(self:backgroundColor())
-        love.graphics.print("", self:x(), self:y())
+        love.graphics.print("", self:x(), self:y() + (self:height() - UI.Fonts.FontAwesomeRegular:getHeight()) / 2)
     else
-        love.graphics.setFont(UI.Fonts.FontAwesomeRegular)
         love.graphics.setColor(self:accentColor())
-        love.graphics.print("", self:x(), self:y())
+        love.graphics.print("", self:x(), self:y() + (self:height() - UI.Fonts.FontAwesomeRegular:getHeight()) / 2)
     end
 
     love.graphics.setFont(UI.DefaultFont)

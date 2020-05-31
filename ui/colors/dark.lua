@@ -31,5 +31,12 @@ return
         highlight_color  = "#EEEEEE",
         background_color = "#424242",
         foreground_color = "#FFFFFF"
+    },
+
+    Toggle =
+    {
+        highlight_color  = "#EEEEEE",
+        background_color = "#424242",
+        foreground_color = "#FFFFFF"
     }
 }
